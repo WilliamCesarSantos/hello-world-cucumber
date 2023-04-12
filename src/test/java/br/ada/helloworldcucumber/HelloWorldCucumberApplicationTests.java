@@ -1,13 +1,13 @@
 package br.ada.helloworldcucumber;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+import org.junit.runner.RunWith;
 
-@SpringBootTest
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        features = "src/test/resources/features"
+)
 class HelloWorldCucumberApplicationTests {
-
-    @Test
-    void contextLoads() {
-    }
 
 }
