@@ -1,10 +1,10 @@
-package br.ada.hellowrorldcucumber;
+package br.ada.helloworldcucumber;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class HelloWrorldCucumberApplicationTests {
+class HelloWorldCucumberApplicationTests {
 
     @Test
     void contextLoads() {

@@ -11,8 +11,8 @@
     <groupId>br.ada</groupId>
     <artifactId>hello-wrorld-cucumber</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>hello-wrorld-cucumber</name>
-    <description>hello-wrorld-cucumber</description>
+    <name>hello-world-cucumber</name>
+    <description>hello-world-cucumber</description>
     <properties>
         <java.version>17</java.version>
         <cucumber.version>7.11.2</cucumber.version>
