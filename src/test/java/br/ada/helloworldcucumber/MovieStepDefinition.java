@@ -35,6 +35,7 @@ public class MovieStepDefinition {
 
     @Given("The movie {string} was not registered")
     public void movieWasNotRegistered(String title) {
+        driver.get("http://localhost:8080/app/movies");
         assertThrows(NoSuchElementException.class, () ->
                 driver.findElement(
                         By.xpath("//td[text()='" + title + "']")
