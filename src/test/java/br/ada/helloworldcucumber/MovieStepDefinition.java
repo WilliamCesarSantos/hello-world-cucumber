@@ -23,9 +23,9 @@ public class MovieStepDefinition {
     @BeforeAll
     public static void setup() {
         WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        driver = new ChromeDriver(options);
+        driver = new ChromeDriver(
+                new ChromeOptions().addArguments("--remote-allow-origins=*")
+        );
     }
 
     @AfterAll
@@ -44,12 +44,30 @@ public class MovieStepDefinition {
 
     @When("Create {string},{string},{int} movie")
     public void createNewMovie(String title, String genre, int rating) {
+        driver.get("http://localhost:8080/app/movies/create");
 
+        driver.findElement(By.id("title")).sendKeys(title);
+        driver.findElement(By.id("genre")).sendKeys(genre);
+        driver.findElement(By.id("rating")).sendKeys(String.valueOf(rating));
+        driver.findElement(By.xpath("//form/button")).click();
     }
 
     @Then("The movie {string} is list")
     public void listMovie(String title) {
+        driver.get("http://localhost:8080/app/movies");
+        WebElement element = driver.findElement(
+                By.xpath("//td[text()='" + title + "']")
+        );
+        Assertions.assertNotNull(element);
+    }
 
+    @Then("The {string} did not registered")
+    public void movieDidntRegistered(String title) {
+        driver.get("http://localhost:8080/app/movies");
+        assertThrows(NoSuchElementException.class, () ->
+                driver.findElement(
+                        By.xpath("//td[text()='" + title + "']")
+                ));
     }
 
 }
