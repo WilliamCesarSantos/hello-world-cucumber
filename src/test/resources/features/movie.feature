@@ -3,7 +3,7 @@ Feature: Movie crud
   Scenario: The terminator was not found
     Given The movie "The terminator" was not registered
     When Create "The terminator","Ação",10 movie
-    Then The movie "The terminator" is list
+    Then The movie "The terminator 2" did registered
 
   Scenario: Try register movie with rating equals 15 - not success
     Given The movie "O auto da compadecida" was not registered
