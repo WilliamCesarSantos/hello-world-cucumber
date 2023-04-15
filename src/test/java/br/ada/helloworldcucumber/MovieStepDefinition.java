@@ -6,7 +6,7 @@ import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.matchers.JUnitMatchers;
+import org.hamcrest.CoreMatchers;
 
 
 public class MovieStepDefinition {
@@ -35,7 +35,12 @@ public class MovieStepDefinition {
     @Then("The movie {string} did registered")
     public void movieDidRegistered(String title) {
         response.then().statusCode(201)
-                .body(JUnitMatchers.containsString(title));
+                .body(CoreMatchers.containsString(title));
+    }
+
+    @Then("Response has status code {int}")
+    public void responseStatusCodeIs(int code) {
+        response.then().statusCode(code);
     }
 
     @Then("The {string} did not registered")
