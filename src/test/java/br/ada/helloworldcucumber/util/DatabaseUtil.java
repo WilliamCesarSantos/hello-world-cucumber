@@ -11,8 +11,9 @@ public class DatabaseUtil {
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM MOVIE WHERE title = '" + title + "'");
              ResultSet result = statement.executeQuery()
         ) {
-            Movie movie = new Movie();
+            Movie movie = null;
             if (result.next()) {
+                movie = new Movie();
                 movie.setId(result.getLong("id"));
                 movie.setTitle(result.getString("title"));
                 movie.setGenre(result.getString("genre"));

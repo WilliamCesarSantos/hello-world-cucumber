@@ -10,10 +10,12 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.hamcrest.CoreMatchers;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Collections;
 
 
 public class MovieStepDefinition {
@@ -26,9 +28,21 @@ public class MovieStepDefinition {
     public void iHaveMovieRegistered(String title) throws SQLException {
         movie = new Movie();
         movie.setTitle(title);
-        movie.setGenre("Ação");
+        movie.setGenre(RandomStringUtils.random(10));
         movie.setRating(9.0f);
         DatabaseUtil.insertMovie(movie);
+
+        request = RestAssured.given()
+                .contentType(ContentType.JSON);
+    }
+
+    @Given("that I don't have the {string} movie registered")
+    public void iDontHaveMovieRegistered(String title) throws SQLException {
+        movie = new Movie();
+        movie.setTitle(title);
+
+        Movie found = DatabaseUtil.readMovie(title);
+        Assertions.assertNull(found);
 
         request = RestAssured.given()
                 .contentType(ContentType.JSON);
@@ -43,6 +57,12 @@ public class MovieStepDefinition {
     public void foundMovieByTitle(String title) {
         String found = response.jsonPath().get("[0].title");
         Assertions.assertEquals(title, found);
+    }
+
+    @Then("I shouldn't found any movie")
+    public void shouldNotFoundAnyMovie() {
+        Collection movies = response.jsonPath().get();
+        Assertions.assertTrue(movies.isEmpty());
     }
 
     @And("The response should have status equals {int}")
