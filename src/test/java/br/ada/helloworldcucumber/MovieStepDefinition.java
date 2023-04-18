@@ -75,7 +75,7 @@ public class MovieStepDefinition {
     }
 
     @Then("the movie was not found in database")
-    public void searchInDatabase_shouldNotFonud() throws SQLException {
+    public void searchInDatabase_shouldNotFound() throws SQLException {
         Movie found = DatabaseUtil.readMovie(movie.getTitle());
         Assertions.assertNull(found);
     }
@@ -87,7 +87,7 @@ public class MovieStepDefinition {
 
     private Movie createMovieFromDataTable(DataTable data) {
         Movie movie = new Movie();
-        data.asMaps().forEach( it -> {
+        data.asMaps().forEach(it -> {
             String title = it.get("title");
             if (title == null) {
                 title = RandomStringUtils.randomAlphabetic(10);
