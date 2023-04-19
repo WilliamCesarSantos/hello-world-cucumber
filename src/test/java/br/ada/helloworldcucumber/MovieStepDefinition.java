@@ -2,6 +2,7 @@ package br.ada.helloworldcucumber;
 
 import br.ada.helloworldcucumber.model.Movie;
 import br.ada.helloworldcucumber.util.DatabaseUtil;
+import com.google.gson.Gson;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -20,6 +21,7 @@ import java.util.Collection;
 
 public class MovieStepDefinition {
 
+    private Gson gson = new Gson();
     private Movie movie = null;
     private RequestSpecification request = RestAssured.given()
             .baseUri("http://localhost:8080/api")
@@ -52,8 +54,27 @@ public class MovieStepDefinition {
 
     @When("I register de the movie")
     public void registerMovie() {
-        String jsonBody = "{\"title\": \"" + movie.getTitle() + "\", \"genre\": \"" + movie.getGenre() + "\", \"rating\": " + movie.getRating() + "}";
+        String jsonBody = gson.toJson(movie);
         response = request.body(jsonBody).when().post("/movies");
+    }
+
+    @When("I apply update on movie")
+    public void updateMovie(DataTable data) throws SQLException {
+        movie = DatabaseUtil.readMovie(movie.getTitle());
+        String title = data.asMap().get("title");
+        if (title != null) {
+            movie.setTitle(title);
+        }
+        String genre = data.asMap().get("genre");
+        if (genre != null) {
+            movie.setGenre(genre);
+        }
+        String rating = data.asMap().get("rating");
+        if (rating != null) {
+            movie.setRating(Float.valueOf(rating));
+        }
+        String jsonBody = gson.toJson(movie);
+        response = request.body(jsonBody).when().put("/movies/" + movie.getId());
     }
 
     @Then("I should found {string} movie")
@@ -83,6 +104,20 @@ public class MovieStepDefinition {
     @And("The response should have status equals {int}")
     public void statusEquals(Integer status) {
         response.then().statusCode(status);
+    }
+
+    @And("the rating equals to {float}")
+    public void ratingEqualsTo(Float rating) throws SQLException {
+        Movie movieInDatabase = DatabaseUtil.readMovie(movie.getTitle());
+        Assertions.assertNotNull(movieInDatabase);
+
+        Assertions.assertEquals(rating, movieInDatabase.getRating());
+    }
+
+    @And("the response should have rating field equals {float}")
+    public void ratingEqualsToInResponse(Float rating) {
+        Float ratingUpdated = response.jsonPath().getFloat("rating");
+        Assertions.assertEquals(rating, ratingUpdated);
     }
 
     private Movie createMovieFromDataTable(DataTable data) {
