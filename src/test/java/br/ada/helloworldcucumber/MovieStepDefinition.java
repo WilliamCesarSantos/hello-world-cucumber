@@ -4,6 +4,7 @@ import br.ada.helloworldcucumber.model.Movie;
 import br.ada.helloworldcucumber.util.DatabaseUtil;
 import com.google.gson.Gson;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -13,6 +14,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Assertions;
 
 import java.sql.SQLException;
@@ -27,6 +29,12 @@ public class MovieStepDefinition {
             .baseUri("http://localhost:8080/api")
             .contentType(ContentType.JSON);
     private Response response;
+
+    @Before
+    public void setup() {
+        String token = TokenUtil.getToken();
+        request.header(HttpHeaders.AUTHORIZATION, token);
+    }
 
     @Given("I have movie registered")
     public void iHaveMovieRegistered(DataTable data) throws SQLException {
@@ -45,17 +53,20 @@ public class MovieStepDefinition {
     @When("I search the movie by title")
     public void searchTheMovie() {
         response = request.when().get("/movies?title=" + movie.getTitle());
+        response.prettyPrint();
     }
 
     @When("I search the movie by id")
     public void searchById() {
         response = request.when().get("/movies/" + movie.getId());
+        response.prettyPrint();
     }
 
     @When("I register de the movie")
     public void registerMovie() {
         String jsonBody = gson.toJson(movie);
         response = request.body(jsonBody).when().post("/movies");
+        response.prettyPrint();
     }
 
     @When("I apply update on movie")
@@ -75,6 +86,7 @@ public class MovieStepDefinition {
         }
         String jsonBody = gson.toJson(movie);
         response = request.body(jsonBody).when().put("/movies/" + movie.getId());
+        response.prettyPrint();
     }
 
     @Then("I should found {string} movie")
