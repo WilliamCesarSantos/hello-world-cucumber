@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "required": [
+    "title",
+    "rating"
+  ],
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "title": {
+      "type": "string"
+    },
+    "genre" : {
+      "type": "string"
+    },
+    "rating": {
+      "type": "number",
+      "format": "float",
+      "minimum" : 0,
+      "maximum" : 10
+    }
+  }
+}
