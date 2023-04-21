@@ -11,12 +11,16 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.Assertions;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Collection;
 
@@ -34,6 +38,7 @@ public class MovieStepDefinition {
     public void setup() {
         String token = TokenUtil.getToken();
         request.header(HttpHeaders.AUTHORIZATION, token);
+        request.header(HttpHeaders.ACCEPT_LANGUAGE, "en-US");
     }
 
     @Given("I have movie registered")
@@ -130,6 +135,13 @@ public class MovieStepDefinition {
     public void ratingEqualsToInResponse(Float rating) {
         Float ratingUpdated = response.jsonPath().getFloat("rating");
         Assertions.assertEquals(rating, ratingUpdated);
+    }
+
+    @And("apply contract validation")
+    public void applyContractValidation() throws FileNotFoundException {
+        InputStream file = new FileInputStream("src/test/resources/movie-schema.json");
+        response.then()
+                .body(JsonSchemaValidator.matchesJsonSchema(file));
     }
 
     private Movie createMovieFromDataTable(DataTable data) {

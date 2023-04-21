@@ -7,6 +7,7 @@ Feature: Register new movies
     When I register de the movie
     Then found the movie in database
     And The response should have status equals 201
+    And apply contract validation
 
   Scenario: Try register movie with rating equals 15
     Given that I don't have the movie registered
