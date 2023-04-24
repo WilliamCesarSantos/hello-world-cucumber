@@ -11,3 +11,4 @@ Feature: Edit movie
     And the rating equals to 10
     And The response should have status equals 200
     And the response should have rating field equals 10
+    And apply contract validation

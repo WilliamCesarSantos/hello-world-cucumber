@@ -7,6 +7,7 @@ Feature: List movies
     When I search the movie by title
     Then I should found "The terminator" movie
     And The response should have status equals 200
+    And apply contract validation on list
 
   Scenario: I don't have movie registered
     Given that I don't have the movie registered

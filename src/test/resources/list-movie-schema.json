@@ -1,5 +1,6 @@
 {
   "type": "array",
+  "additionalProperties": false,
   "items": {
     "type" : "object",
     "required": [

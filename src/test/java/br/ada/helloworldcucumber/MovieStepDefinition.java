@@ -144,6 +144,13 @@ public class MovieStepDefinition {
                 .body(JsonSchemaValidator.matchesJsonSchema(file));
     }
 
+    @And("apply contract validation on list")
+    public void applyContractValidationOnList() throws FileNotFoundException {
+        InputStream file = new FileInputStream("src/test/resources/movie-schema.json");
+        response.then()
+                .body(JsonSchemaValidator.matchesJsonSchema(file));
+    }
+
     private Movie createMovieFromDataTable(DataTable data) {
         Movie movie = new Movie();
         data.asMaps().forEach(it -> {
